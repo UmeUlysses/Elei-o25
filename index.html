@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Eleição Grêmio 2025</title>
+  <link rel="shortcut icon" href="ume.ico" type="image/x-icon"/>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin-top: 50px;
+      text-transform: uppercase;
+      background-color: color-mix(in srgb, #196BF0, white 80%);
+    }
+
+    button {
+      margin: 10px;
+      padding: 15px 25px;
+      font-size: 25px;
+      cursor: pointer;
+      border-radius: 10px;
+      border: none;
+      color: white;
+      width: 340px;
+      height: 80px;
+      text-transform: uppercase;
+      font-weight: bold;
+    }
+    .c1 { background-color: #3498db; }
+    .c2 { background-color: #e74c3c; }
+    .c3 { background-color: #2ecc71; }
+    .c4 { background-color: #F2B646; }
+    button:hover { opacity: 0.8; }
+  </style>
+</head>
+<body>
+
+  <audio id="somVoto" src="urna.mp3" preload="auto"></audio>
+  <h1>Ume Dr. Ulysses Guimarães</h1>
+  <h2>Eleição Grêmio 2025</h2>
+  <br><br><br><br><br><br><br><br><br>
+
+  <button class="c1" onclick="votar('Ação Jovem')">1 - Ação Jovem</button>
+  <button class="c2" onclick="votar('Guará Vermelho')">2 - Guará Vermelho</button>
+  <button class="c3" onclick="votar('M.E.P')">3 - M.E.P</button>
+  <button class="c4" onclick="votar('Fênix')">4 - Fênix</button>
+
+  <script>
+const API_URL = "https://script.google.com/macros/s/AKfycbyIlAYXOby9OQhIND3mUKk0bVPYaXVPE4cmO7bFyIIPWf7OUiPQHOKnEEvraGrMOWEA/exec";
+
+async function votar(candidato) {
+  try {
+    const resp = await fetch(API_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ candidato }),
+    });
+
+    const texto = await resp.text(); // pega resposta bruta
+    console.log("Resposta do servidor:", texto);
+
+    if (resp.ok && texto.includes("ok")) {
+      const som = document.getElementById("somVoto");
+      if (som) {
+        som.currentTime = 0;
+        som.play();
+      }
+      alert("Voto computado com sucesso!");
+    } else {
+      alert("Erro: servidor não confirmou o voto.\nVeja o console (F12).");
+    }
+  } catch (e) {
+    alert("Erro ao registrar voto. Veja o console (F12).");
+    console.error(e);
+  }
+}
+</script>
+
+</body>
+</html>
